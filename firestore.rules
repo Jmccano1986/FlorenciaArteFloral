@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Función para verificar si el usuario es administrador y tiene el email verificado
+    function isAdmin() {
+      return request.auth != null && 
+             request.auth.token.email_verified == true &&
+             (request.auth.token.email == 'jorgemario224@gmail.com' || 
+              request.auth.token.email == 'paulabueno73@gmail.com');
+    }
+
+    match /{document=**} {
+      // Lectura permitida para todos
+      allow read: if true;
+      
+      // Escritura permitida solo para administradores verificados
+      allow write: if isAdmin();
+    }
+  }
+}

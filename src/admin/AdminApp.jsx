@@ -1,13 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { auth } from '../firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import Dashboard from './Dashboard';
 import CategoriesManager from './CategoriesManager';
 import ProductsManager from './ProductsManager';
 import ConfigManager from './ConfigManager';
+import Login from './Login';
 
-const AdminLayout = ({ children }) => {
+// LISTA DE CORREOS AUTORIZADOS
+const ALLOWED_EMAILS = [
+  'jorgemario224@gmail.com', // Reemplaza con tu correo
+  'paulabueno73@gmail.com' // Reemplaza con el correo de la dueña/dueño
+];
+
+const AdminLayout = ({ children, user }) => {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/admin');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   const navItems = [
     { path: '/admin', label: 'Dashboard' },
     { path: '/admin/categories', label: 'Categorías' },
@@ -24,7 +44,7 @@ const AdminLayout = ({ children }) => {
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Mobile Backdrop */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
@@ -38,7 +58,7 @@ const AdminLayout = ({ children }) => {
       `}>
         <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
           <h1 className="text-lg font-serif font-bold text-florencia-dark leading-tight">Florencia<br />Administrador</h1>
-          <button 
+          <button
             className="md:hidden p-2 text-gray-500 hover:text-gray-700"
             onClick={() => setIsSidebarOpen(false)}
           >
@@ -64,12 +84,32 @@ const AdminLayout = ({ children }) => {
             ))}
           </ul>
         </nav>
+
+        {/* User Info & Logout */}
+        <div className="p-4 border-t border-gray-200">
+          <div className="flex items-center gap-3 mb-4 px-2">
+            <img src={user.photoURL} alt={user.displayName} className="w-8 h-8 rounded-full border border-gray-200" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-gray-900 truncate">{user.displayName}</p>
+              <p className="text-[10px] text-gray-500 truncate">{user.email}</p>
+            </div>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Cerrar Sesión
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 min-w-0 overflow-y-auto h-screen">
         <header className="sticky top-0 z-30 h-16 bg-white border-b border-gray-200 flex items-center px-4 md:px-8">
-          <button 
+          <button
             className="md:hidden p-2 mr-2 text-gray-500 hover:text-gray-700 focus:outline-none"
             onClick={() => setIsSidebarOpen(true)}
           >
@@ -90,8 +130,52 @@ const AdminLayout = ({ children }) => {
 };
 
 const AdminApp = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        if (ALLOWED_EMAILS.includes(currentUser.email)) {
+          if (currentUser.emailVerified) {
+            setUser(currentUser);
+            setError(null);
+          } else {
+            // Si el correo no está verificado, cerrar sesión
+            signOut(auth);
+            setError('Tu correo electrónico no ha sido verificado. Por favor, verifícalo para continuar.');
+            setUser(null);
+          }
+        } else {
+          // Si el correo no está en la lista, cerrar sesión automáticamente
+          signOut(auth);
+          setError('Tu cuenta de Google no tiene permisos para acceder a este panel.');
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-florencia-cream flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-florencia-gold border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login error={error} />;
+  }
+
   return (
-    <AdminLayout>
+    <AdminLayout user={user}>
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/categories" element={<CategoriesManager />} />

@@ -1,0 +1,28 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Función para verificar si el usuario es administrador y tiene el email verificado
+    function isAdmin() {
+      return request.auth != null && 
+             request.auth.token.email_verified == true &&
+             (request.auth.token.email == 'jorgemario224@gmail.com' || 
+              request.auth.token.email == 'paulabueno73@gmail.com');
+    }
+
+    // Función para validar que el archivo sea una imagen webp
+    function isWebp() {
+      return request.resource.contentType == 'image/webp';
+    }
+
+    match /{allPaths=**} {
+      // Permitir lectura pública (ajusta si necesitas que sea privada)
+      allow read: if true;
+      
+      // Solo permitir subir o actualizar si es administrador y el formato es WebP
+      allow create, update: if isAdmin() && isWebp();
+      
+      // Solo permitir borrar si es administrador
+      allow delete: if isAdmin();
+    }
+  }
+}

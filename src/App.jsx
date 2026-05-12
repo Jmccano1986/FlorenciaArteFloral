@@ -190,7 +190,7 @@ const Header = () => {
       transition={{ duration: 0.5, ease: "easeInOut" }}
       className="fixed top-20 left-0 w-full z-50 flex justify-center px-4 pointer-events-none"
     >
-      <div className={`floating-header pointer-events-auto flex items-center justify-between px-6 md:px-6 w-[95%] md:w-max max-w-4xl transition-all duration-300 ${scrolled ? 'scale-95' : 'scale-100'}`}>
+      <div className={`floating-header pointer-events-auto flex items-center justify-between px-2 md:px-6 w-[95%] md:w-[35%] max-w-4xl transition-all duration-300 ${scrolled ? 'scale-95' : 'scale-100'}`}>
         <nav className="flex-1 flex justify-start">
           <button
             onClick={() => handleNavClick('nosotros')}
@@ -301,7 +301,7 @@ const Footer = () => {
 
       <div className="max-w-6xl mx-auto mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs opacity-50 font-light tracking-widest uppercase">
         <p>&copy; {new Date().getFullYear()} Florencia Arte Floral. Todos los derechos reservados.</p>
-        <p>Diseño por EAM Tecno Soluciones</p>
+        <p>Desarrollado por <a href="https://cofitx.web.app/" target="_blank" rel="noopener noreferrer" className="hover:text-florencia-gold transition-colors">Cofitx</a></p>
       </div>
     </footer>
   );
@@ -377,13 +377,11 @@ const WhatsAppButton = () => {
           hover: { opacity: 1, x: 0, scale: 1 }
         }}
         transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-        className="bg-white px-5 py-3 rounded-xl shadow-2xl mr-4 border border-gray-50 flex items-center justify-center"
+        className="bg-white px-5 py-2 rounded-xl shadow-2xl mr-4 border border-gray-50 flex items-center justify-center"
       >
-        <p className="text-[15px] font-medium text-gray-800 whitespace-nowrap leading-none">
+        <p className="text-[12px] font-medium text-gray-800 whitespace-nowrap leading-none">
           ¿Te ayudamos?
         </p>
-        {/* Triangle tip for the bubble */}
-        <div className="absolute right-[-6px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[6px] border-t-transparent border-l-[6px] border-l-white border-b-[6px] border-b-transparent"></div>
       </motion.div>
 
       <motion.a
