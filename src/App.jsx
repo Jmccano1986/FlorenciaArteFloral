@@ -27,7 +27,7 @@ const NotificationBar = () => {
   }, []);
 
   return (
-    <div className="w-full bg-florencia-dark text-white py-3 text-center text-xs tracking-[0.2em] uppercase font-medium relative z-[60]">
+    <div className="w-full bg-florencia-dark text-white py-2 text-center text-[10px] md:text-xs tracking-[0.2em] font-normal relative z-[60]">
       <p>{text}</p>
     </div>
   );
@@ -405,6 +405,46 @@ const WhatsAppButton = () => {
   );
 };
 
+const FloatingSocialTab = () => {
+  const scrollToSocial = () => {
+    const section = document.getElementById('social-section');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <motion.button
+      initial={{ x: -50, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      whileHover={{ x: 0 }}
+      onClick={scrollToSocial}
+      className="fixed left-0 bottom-0 z-[80] bg-florencia-dark text-white px-1 py-6 rounded-r-xl shadow-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 group overflow-hidden"
+    >
+      <span
+        className="text-[10px] md:text-xs font-medium tracking-[0.3em] [writing-mode:vertical-rl] rotate-180"
+      >
+        Redes
+      </span>
+      <div className="w-[1px] h-2 bg-white/20 mt-1" />
+      <motion.div
+        animate={{ y: [0, 5, 0] }}
+        transition={{ repeat: Infinity, duration: 2 }}
+        className="mt-1"
+      >
+        <svg
+          className="w-4 h-4 text-florencia-gold"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
+        </svg>
+      </motion.div>
+    </motion.button>
+  );
+};
+
 const SocialFlowersSection = () => {
   const socialLinks = [
     { id: 'insta', img: florInsta, url: 'https://www.instagram.com/florencia_artefloral', delay: 0.4 },
@@ -413,7 +453,7 @@ const SocialFlowersSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-florencia-cream overflow-hidden relative min-h-screen flex items-center justify-center border-b border-gray-100">
+    <section id="social-section" className="py-20 bg-florencia-cream overflow-hidden relative min-h-screen flex items-center justify-center border-b border-gray-100">
       <motion.div
         initial="initial"
         whileInView="animate"
@@ -588,6 +628,7 @@ const Storefront = () => {
       )}
 
       <WhatsAppButton />
+      <FloatingSocialTab />
     </>
   );
 };
