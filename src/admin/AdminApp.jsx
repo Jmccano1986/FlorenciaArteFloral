@@ -10,8 +10,9 @@ import Login from './Login';
 
 // LISTA DE CORREOS AUTORIZADOS
 const ALLOWED_EMAILS = [
-  'jorgemario224@gmail.com', // Reemplaza con tu correo
-  'paulabueno73@gmail.com' // Reemplaza con el correo de la dueña/dueño
+  'jorgemario224@gmail.com', // desarrollador
+  'paulabueno73@gmail.com', // contratante
+  'mia.floristeriapereira@gmail.com' // empleados
 ];
 
 const AdminLayout = ({ children, user }) => {

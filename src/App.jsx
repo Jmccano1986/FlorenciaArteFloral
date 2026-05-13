@@ -8,6 +8,11 @@ import AdminApp from './admin/AdminApp';
 import { db } from './firebase';
 import { doc, onSnapshot, collection, query, orderBy, where } from 'firebase/firestore';
 
+// Assets para animación de redes sociales
+import florInsta from './assets/flor_instagram.webp';
+import florTiktok from './assets/flor_tiktok.webp';
+import florFb from './assets/flor_facebook.webp';
+
 const NotificationBar = () => {
   const [text, setText] = useState('Envios a todo el país • Diseños florales exclusivos');
 
@@ -400,6 +405,73 @@ const WhatsAppButton = () => {
   );
 };
 
+const SocialFlowersSection = () => {
+  const socialLinks = [
+    { id: 'insta', img: florInsta, url: 'https://www.instagram.com/florencia_artefloral', delay: 0.4 },
+    { id: 'tiktok', img: florTiktok, url: 'https://www.tiktok.com/@florencia_artefloral', delay: 0.6 },
+    { id: 'fb', img: florFb, url: 'https://www.facebook.com/miafloristeriapereira', delay: 0.8 },
+  ];
+
+  return (
+    <section className="py-20 bg-florencia-cream overflow-hidden relative min-h-screen flex items-center justify-center border-b border-gray-100">
+      <motion.div
+        initial="initial"
+        whileInView="animate"
+        viewport={{ once: true, margin: "-100px" }}
+        className="w-full max-w-6xl relative h-[300px]"
+      >
+        {/* Las Flores / Redes Sociales */}
+        <div className="flex justify-center items-center gap-4 md:gap-12 w-full h-full relative z-10">
+          {socialLinks.map((social) => (
+            <motion.a
+              key={social.id}
+              href={social.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              variants={{
+                initial: { x: '80vw', opacity: 0 },
+                animate: {
+                  x: 0,
+                  opacity: 1,
+                  rotate: [0, -5, 5, -2, 2, 0]
+                }
+              }}
+              transition={{
+                x: { type: "spring", stiffness: 40, damping: 12, delay: social.delay },
+                opacity: { duration: 0.5, delay: social.delay },
+                rotate: { duration: 0.8, delay: social.delay + 1.5 }
+              }}
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="block group"
+            >
+              <motion.img
+                src={social.img}
+                alt={social.id}
+                style={{ maxHeight: '200px' }}
+                className="w-auto object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)]"
+                animate={{
+                  y: [0, -12, 0, -6, 0],
+                }}
+                transition={{
+                  y: {
+                    repeat: Infinity,
+                    duration: 4,
+                    ease: "easeInOut",
+                    delay: social.delay + 2.5
+                  }
+                }}
+              />
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] uppercase tracking-widest text-florencia-dark font-medium whitespace-nowrap text-center">
+                Seguir en <br /> {social.id === 'fb' ? 'Facebook' : social.id === 'insta' ? 'Instagram' : 'TikTok'}
+              </div>
+            </motion.a>
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+};
+
 const Storefront = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -438,14 +510,19 @@ const Storefront = () => {
         <HeroSection />
 
         {/* Placeholder sections for scrolling demo */}
-        <section id="nosotros" className="py-24 px-8 bg-florencia-cream min-h-screen flex items-center justify-center">
+        <section id="nosotros" className="md:py-24 px-8 bg-florencia-cream min-h-screen flex items-center justify-center">
           <div className="max-w-3xl text-center">
             <h2 className="text-4xl md:text-5xl mb-8">Nuestra Historia</h2>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              En Florencia Arte Floral, creemos que cada flor cuenta una historia.<br />Nuestra pasión es transformar la naturaleza en piezas de arte que transmiten emociones y decoran tus momentos más especiales.
-            </p>
+            <div className="text-base md:text-[17px] text-gray-600 leading-relaxed space-y-6">
+              <p>Florencia es una marca pereirana que inició en el año 2016 bajo el nombre MÍA Floristería, con el propósito de transformar la manera de regalar flores en el mercado local.<br />
+                Nuestra floración constante se basa en construiruna experiencia sensorial, olfativa y visual a través de piezas únicas, creadas con atención, sensibilidad y amor por los detalles.<br />
+                Hoy, nuestro sello es Florencia Arte Floral, y nuestro propósito sigue siendo guiar a nuestros clientes a comprender que cada uno de nuestros diseños llega a ellos con un objetivo:</p>
+              <p className="italic font-serif text-xl text-florencia-gold md:pt-4">vivir el momento presente con atención, detenerse, observarlos, cuidarlos y disfrutarlos.</p>
+            </div>
           </div>
         </section>
+
+        <SocialFlowersSection />
 
         <section id="catalogo" className="py-16 px-8 bg-white min-h-[50vh] flex items-center justify-center border-t border-gray-100">
           <div className="max-w-6xl w-full text-center">
