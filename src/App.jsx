@@ -13,6 +13,21 @@ import florInsta from './assets/flor_instagram.webp';
 import florTiktok from './assets/flor_tiktok.webp';
 import florFb from './assets/flor_facebook.webp';
 
+// Imágenes de fondo para sección social
+import soc01 from './assets/socialpics/soc01.webp';
+import soc02 from './assets/socialpics/soc02.webp';
+import soc03 from './assets/socialpics/soc03.webp';
+import soc04 from './assets/socialpics/soc04.webp';
+import soc05 from './assets/socialpics/soc05.webp';
+import soc06 from './assets/socialpics/soc06.webp';
+import soc07 from './assets/socialpics/soc07.webp';
+import soc08 from './assets/socialpics/soc08.webp';
+import soc09 from './assets/socialpics/soc09.webp';
+import soc10 from './assets/socialpics/soc10.webp';
+import soc11 from './assets/socialpics/soc11.webp';
+import soc12 from './assets/socialpics/soc12.webp';
+import soc13 from './assets/socialpics/soc13.webp';
+
 const NotificationBar = () => {
   const [text, setText] = useState('Envios a todo el país • Diseños florales exclusivos');
 
@@ -275,6 +290,7 @@ const Footer = () => {
             <nav className="flex flex-col items-center space-y-3 text-sm opacity-90 font-light tracking-wide">
               <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-florencia-gold transition-colors">Inicio</button>
               <button onClick={() => scrollToSection('nosotros')} className="hover:text-florencia-gold transition-colors">Nosotros</button>
+              <button onClick={() => scrollToSection('social-section')} className="hover:text-florencia-gold transition-colors">Social</button>
               <button onClick={() => scrollToSection('catalogo')} className="hover:text-florencia-gold transition-colors">Catálogo</button>
               <button onClick={() => scrollToSection('contacto')} className="hover:text-florencia-gold transition-colors">Contacto</button>
             </nav>
@@ -374,7 +390,7 @@ const WhatsAppButton = () => {
     <motion.div
       initial="initial"
       whileHover="hover"
-      className="fixed bottom-8 right-8 z-[100] flex items-center pointer-events-none"
+      className="fixed bottom-3 right-3 z-[100] flex items-center pointer-events-none"
     >
       <motion.div
         variants={{
@@ -452,16 +468,59 @@ const SocialFlowersSection = () => {
     { id: 'fb', img: florFb, url: 'https://www.facebook.com/miafloristeriapereira', delay: 0.8 },
   ];
 
+  const backgroundImages = [
+    soc01, soc02, soc03, soc04, soc05, soc06, soc07,
+    soc08, soc09, soc10, soc11, soc12, soc13
+  ];
+
+  // Generamos posiciones aleatorias fijas para las imágenes de fondo
+  const bgElements = React.useMemo(() => {
+    return backgroundImages.map((img, i) => ({
+      img,
+      top: `${Math.random() * 80 + 5}%`,
+      left: `${Math.random() * 85 + 2}%`,
+      rotate: Math.random() * 60 - 30, // Entre -30 y 30 grados
+      duration: Math.random() * 4 + 4, // Duración aleatoria para el parpadeo
+      delay: Math.random() * 8, // Delay inicial aleatorio
+    }));
+  }, []);
+
   return (
-    <section id="social-section" className="py-20 bg-florencia-cream overflow-hidden relative min-h-screen flex items-center justify-center border-b border-gray-100">
+    <section id="social-section" className="py-20 bg-white overflow-hidden relative min-h-screen flex items-center justify-center border-y border-gray-100">
+      {/* Imágenes de fondo parpadeantes */}
+      <div className="absolute inset-0 pointer-events-none opacity-40">
+        {bgElements.map((el, i) => (
+          <motion.img
+            key={i}
+            src={el.img}
+            alt=""
+            className="absolute h-[150px] md:h-[200px] object-contain grayscale-[30%] blur-[1px] hover:blur-0 transition-all duration-1000"
+            style={{
+              top: el.top,
+              left: el.left,
+              rotate: `${el.rotate}deg`,
+            }}
+            animate={{
+              opacity: [0, 1, 0.2, 0.8, 0],
+              scale: [0.9, 1, 0.95, 1, 0.9],
+            }}
+            transition={{
+              duration: el.duration,
+              repeat: Infinity,
+              delay: el.delay,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
       <motion.div
         initial="initial"
         whileInView="animate"
         viewport={{ once: true, margin: "-100px" }}
-        className="w-full max-w-6xl relative h-[300px]"
+        className="w-full max-w-6xl relative h-auto md:h-[300px] py-12 md:py-0"
       >
         {/* Las Flores / Redes Sociales */}
-        <div className="flex justify-center items-center gap-4 md:gap-12 w-full h-full relative z-10">
+        <div className="flex flex-col md:flex-row justify-center items-center gap-10 md:gap-12 w-full h-full relative z-10">
           {socialLinks.map((social) => (
             <motion.a
               key={social.id}
@@ -487,8 +546,7 @@ const SocialFlowersSection = () => {
               <motion.img
                 src={social.img}
                 alt={social.id}
-                style={{ maxHeight: '200px' }}
-                className="w-auto object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)]"
+                className="h-[130px] md:h-[200px] w-auto object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)]"
                 animate={{
                   y: [0, -12, 0, -6, 0],
                 }}
@@ -564,7 +622,7 @@ const Storefront = () => {
 
         <SocialFlowersSection />
 
-        <section id="catalogo" className="py-16 px-8 bg-white min-h-[50vh] flex items-center justify-center border-t border-gray-100">
+        <section id="catalogo" className="py-16 px-8 bg-florencia-cream min-h-[50vh] flex items-center justify-center border-t border-gray-100">
           <div className="max-w-6xl w-full text-center">
             <h2 className="text-4xl md:text-5xl mb-12">Catálogo</h2>
 
