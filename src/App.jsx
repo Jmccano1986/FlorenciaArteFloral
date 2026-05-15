@@ -13,12 +13,14 @@ import florInsta from './assets/flor_instagram.webp';
 import florTiktok from './assets/flor_tiktok.webp';
 import florFb from './assets/flor_facebook.webp';
 
-// Fondos para sección social
+// Fondos para sección social y nosotros
 import bgsocial169 from './assets/bgsocial169.webp';
 import bgsocial916 from './assets/bgsocial916.webp';
+import bghistory169 from './assets/bghistory169.webp';
+import bghistory916 from './assets/bghistory916.webp';
 
 const NotificationBar = () => {
-  const [text, setText] = useState('Envios a todo el país • Diseños florales exclusivos');
+  const [text, setText] = useState('Envíos en Pereira y Dosquebradas • Diseños florales exclusivos');
 
   useEffect(() => {
     // Listen for real-time updates to the notification config
@@ -31,7 +33,7 @@ const NotificationBar = () => {
   }, []);
 
   return (
-    <div className="w-full bg-florencia-dark text-white py-2 text-center text-[10px] md:text-xs tracking-[0.2em] font-normal relative z-[60]">
+    <div className="w-full bg-florencia-dark text-white py-2 text-center text-[12px] md:text-sm tracking-[0.2em] font-normal relative z-[60]">
       <p>{text}</p>
     </div>
   );
@@ -62,6 +64,15 @@ const CategoryModal = ({ category, onClose, hidePrices }) => {
     return () => unsubscribe();
   }, [category]);
 
+  useEffect(() => {
+    // Bloquear scroll del body al abrir el modal
+    document.body.style.overflow = 'hidden';
+    return () => {
+      // Restaurar scroll al cerrar
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   if (!category) return null;
 
   return (
@@ -70,21 +81,23 @@ const CategoryModal = ({ category, onClose, hidePrices }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+        className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md"
         onClick={onClose}
       >
         <motion.div
-          initial={{ scale: 0.95, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.95, opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: '100%' }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: '100%' }}
+          transition={{ type: 'spring', damping: 25, stiffness: 200 }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-florencia-cream w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-lg shadow-2xl relative"
+          className="bg-florencia-cream w-full h-full overflow-y-auto relative"
         >
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 p-2 bg-white/50 hover:bg-white rounded-full transition-colors"
+            className="fixed top-6 right-6 z-[110] p-3 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-300 group"
+            title="Cerrar"
           >
-            <svg className="w-6 h-6 text-florencia-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-florencia-dark group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -214,11 +227,11 @@ const Header = () => {
       transition={{ duration: 0.5, ease: "easeInOut" }}
       className="fixed top-20 left-0 w-full z-50 flex justify-center px-4 pointer-events-none"
     >
-      <div className={`floating-header pointer-events-auto flex items-center justify-between px-4 md:px-6 w-[95%] lg:w-[35%] max-w-4xl transition-all duration-300 ${scrolled ? 'scale-95' : 'scale-100'}`}>
+      <div className={`floating-header pointer-events-auto flex items-center justify-between px-4 md:px-6 w-[95%] md:w-[50%] xl:w-[28%] max-w-4xl transition-all duration-300 ${scrolled ? 'scale-95' : 'scale-100'}`}>
         <nav className="flex-1 flex justify-start">
           <button
             onClick={() => handleNavClick('nosotros')}
-            className="text-white uppercase tracking-[0.2em] text-sm font-medium hover:opacity-70 transition-opacity bg-transparent border-0 cursor-pointer"
+            className="text-white uppercase tracking-[0.1em] text-sm font-bold font-narrow hover:opacity-70 transition-opacity bg-transparent border-0 cursor-pointer"
           >
             Nosotros
           </button>
@@ -231,7 +244,7 @@ const Header = () => {
         <nav className="flex-1 flex justify-end">
           <button
             onClick={() => handleNavClick('catalogo')}
-            className="text-white uppercase tracking-[0.2em] text-sm font-medium hover:opacity-70 transition-opacity bg-transparent border-0 cursor-pointer"
+            className="text-white uppercase tracking-[0.1em] text-sm font-bold font-narrow hover:opacity-70 transition-opacity bg-transparent border-0 cursor-pointer"
           >
             Catálogo
           </button>
@@ -595,15 +608,32 @@ const Storefront = () => {
         <HeroSection />
 
         {/* Placeholder sections for scrolling demo */}
-        <section id="nosotros" className="md:py-24 px-8 bg-[#f4f4f6] min-h-screen flex items-center justify-center">
-          <div className="max-w-3xl text-center">
-            <h2 className="text-4xl md:text-5xl mb-8">Nuestra Historia</h2>
-            <div className="text-base md:text-[17px] text-gray-600 leading-relaxed space-y-6">
-              <p>Florencia es una marca pereirana que inició en el año 2016 bajo el nombre MÍA Floristería, con el propósito de transformar la manera de regalar flores en el mercado local.<br />
-                Nuestra floración constante se basa en construiruna experiencia sensorial, olfativa y visual a través de piezas únicas, creadas con atención, sensibilidad y amor por los detalles.<br />
-                Hoy, nuestro sello es Florencia Arte Floral, y nuestro propósito sigue siendo guiar a nuestros clientes a comprender que cada uno de nuestros diseños llega a ellos con un objetivo:</p>
-              <p className="italic font-serif text-xl text-florencia-gold md:pt-4">vivir el momento presente con atención, detenerse, observarlos, cuidarlos y disfrutarlos.</p>
-            </div>
+        <section id="nosotros" className="relative min-h-screen flex flex-col items-center justify-start pt-[10%] lg:pt-[3%] px-8 overflow-hidden">
+          {/* Fondo Responsivo */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src={bghistory169}
+              alt=""
+              className="hidden md:block w-full h-full object-cover"
+            />
+            <img
+              src={bghistory916}
+              alt=""
+              className="block md:hidden w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/10" />
+          </div>
+
+          <div className="relative z-10 text-center">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-4xl md:text-5xl font-serif italic drop-shadow-lg"
+            >
+              Nuestra Historia
+            </motion.h2>
           </div>
         </section>
 

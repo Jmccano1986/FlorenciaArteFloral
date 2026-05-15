@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         serif: ['Playfair Display', 'serif'],
         sans: ['Inter', 'sans-serif'],
+        narrow: ['"Roboto Condensed"', 'sans-serif-condensed', 'sans-serif'],
       }
     },
   },
