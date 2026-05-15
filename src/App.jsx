@@ -13,20 +13,9 @@ import florInsta from './assets/flor_instagram.webp';
 import florTiktok from './assets/flor_tiktok.webp';
 import florFb from './assets/flor_facebook.webp';
 
-// Imágenes de fondo para sección social
-import soc01 from './assets/socialpics/soc01.webp';
-import soc02 from './assets/socialpics/soc02.webp';
-import soc03 from './assets/socialpics/soc03.webp';
-import soc04 from './assets/socialpics/soc04.webp';
-import soc05 from './assets/socialpics/soc05.webp';
-import soc06 from './assets/socialpics/soc06.webp';
-import soc07 from './assets/socialpics/soc07.webp';
-import soc08 from './assets/socialpics/soc08.webp';
-import soc09 from './assets/socialpics/soc09.webp';
-import soc10 from './assets/socialpics/soc10.webp';
-import soc11 from './assets/socialpics/soc11.webp';
-import soc12 from './assets/socialpics/soc12.webp';
-import soc13 from './assets/socialpics/soc13.webp';
+// Fondos para sección social
+import bgsocial169 from './assets/bgsocial169.webp';
+import bgsocial916 from './assets/bgsocial916.webp';
 
 const NotificationBar = () => {
   const [text, setText] = useState('Envios a todo el país • Diseños florales exclusivos');
@@ -115,7 +104,7 @@ const CategoryModal = ({ category, onClose, hidePrices }) => {
             ) : products.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {products.map((product) => (
-                  <div key={product.id} className="bg-white rounded-md overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+                  <div key={product.id} className="bg-white rounded-md overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col">
                     <div className="aspect-square relative overflow-hidden bg-gray-100">
                       {product.imageUrl ? (
                         <img
@@ -127,12 +116,27 @@ const CategoryModal = ({ category, onClose, hidePrices }) => {
                         <div className="w-full h-full flex items-center justify-center text-gray-400">Sin imagen</div>
                       )}
                     </div>
-                    <div className="p-6">
+                    <div className="p-6 flex flex-col flex-grow">
                       <h3 className="font-serif text-xl mb-2">{product.reference}</h3>
                       <p className="text-sm text-gray-600 mb-4 line-clamp-2">{product.description}</p>
-                      {!hidePrices && (
-                        <p className="text-florencia-gold font-medium">${product.price?.toLocaleString()}</p>
-                      )}
+
+                      <div className="mt-auto pt-4 border-t border-gray-50">
+                        {!hidePrices && (
+                          <p className="text-florencia-gold font-medium text-lg mb-4">${product.price?.toLocaleString()}</p>
+                        )}
+
+                        <a
+                          href={`https://wa.me/573113004312?text=${encodeURIComponent(`¡Hola! Me encantó este diseño floral de la categoría *${category.name}*. Se llama *${product.reference}*. ¿Me podrías dar más información? 🌸`)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full inline-flex items-center justify-center gap-2 bg-florencia-dark text-white px-6 py-3 rounded-sm hover:bg-florencia-gold transition-all duration-300 text-xs uppercase tracking-widest font-medium group/btn"
+                        >
+                          Comprar
+                          <svg className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -210,7 +214,7 @@ const Header = () => {
       transition={{ duration: 0.5, ease: "easeInOut" }}
       className="fixed top-20 left-0 w-full z-50 flex justify-center px-4 pointer-events-none"
     >
-      <div className={`floating-header pointer-events-auto flex items-center justify-between px-2 md:px-6 w-[95%] md:w-[35%] max-w-4xl transition-all duration-300 ${scrolled ? 'scale-95' : 'scale-100'}`}>
+      <div className={`floating-header pointer-events-auto flex items-center justify-between px-4 md:px-6 w-[95%] lg:w-[35%] max-w-4xl transition-all duration-300 ${scrolled ? 'scale-95' : 'scale-100'}`}>
         <nav className="flex-1 flex justify-start">
           <button
             onClick={() => handleNavClick('nosotros')}
@@ -435,12 +439,12 @@ const FloatingSocialTab = () => {
       animate={{ x: 0, opacity: 1 }}
       whileHover={{ x: 0 }}
       onClick={scrollToSocial}
-      className="fixed left-0 bottom-0 z-[80] bg-florencia-dark text-white px-1 py-6 rounded-r-xl shadow-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 group overflow-hidden"
+      className="fixed left-0 bottom-0 z-[80] bg-florencia-dark text-white px-2 py-6 rounded-r-xl shadow-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 group overflow-hidden"
     >
       <span
         className="text-[10px] md:text-xs font-medium tracking-[0.3em] [writing-mode:vertical-rl] rotate-180"
       >
-        Redes
+        Nuestras Redes
       </span>
       <div className="w-[1px] h-2 bg-white/20 mt-1" />
       <motion.div
@@ -468,56 +472,39 @@ const SocialFlowersSection = () => {
     { id: 'fb', img: florFb, url: 'https://www.facebook.com/miafloristeriapereira', delay: 0.8 },
   ];
 
-  const backgroundImages = [
-    soc01, soc02, soc03, soc04, soc05, soc06, soc07,
-    soc08, soc09, soc10, soc11, soc12, soc13
-  ];
-
-  // Generamos posiciones aleatorias fijas para las imágenes de fondo
-  const bgElements = React.useMemo(() => {
-    return backgroundImages.map((img, i) => ({
-      img,
-      top: `${Math.random() * 80 + 5}%`,
-      left: `${Math.random() * 85 + 2}%`,
-      rotate: Math.random() * 60 - 30, // Entre -30 y 30 grados
-      duration: Math.random() * 4 + 4, // Duración aleatoria para el parpadeo
-      delay: Math.random() * 8, // Delay inicial aleatorio
-    }));
-  }, []);
-
   return (
-    <section id="social-section" className="py-20 bg-white overflow-hidden relative min-h-screen flex items-center justify-center border-y border-gray-100">
-      {/* Imágenes de fondo parpadeantes */}
-      <div className="absolute inset-0 pointer-events-none opacity-40">
-        {bgElements.map((el, i) => (
-          <motion.img
-            key={i}
-            src={el.img}
-            alt=""
-            className="absolute h-[150px] md:h-[200px] object-contain grayscale-[30%] blur-[1px] hover:blur-0 transition-all duration-1000"
-            style={{
-              top: el.top,
-              left: el.left,
-              rotate: `${el.rotate}deg`,
-            }}
-            animate={{
-              opacity: [0, 1, 0.2, 0.8, 0],
-              scale: [0.9, 1, 0.95, 1, 0.9],
-            }}
-            transition={{
-              duration: el.duration,
-              repeat: Infinity,
-              delay: el.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
+    <section id="social-section" className="py-24 bg-white overflow-hidden relative flex flex-col items-center justify-center border-y border-gray-100 min-h-[600px] md:min-h-screen">
+      {/* Fondo Responsivo */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src={bgsocial169}
+          alt=""
+          className="hidden md:block w-full h-full object-cover"
+        />
+        <img
+          src={bgsocial916}
+          alt=""
+          className="block md:hidden w-full h-full object-cover"
+        />
+        {/* Capa de suavizado para que las flores resalten */}
+        <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px]" />
       </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-16 z-10"
+      >
+        <h2 className="text-white text-4xl md:text-5xl">Nuestras Redes</h2>
+      </motion.div>
+
       <motion.div
         initial="initial"
         whileInView="animate"
         viewport={{ once: true, margin: "-100px" }}
-        className="w-full max-w-6xl relative h-auto md:h-[300px] py-12 md:py-0"
+        className="w-full max-w-6xl relative h-auto md:h-[300px]"
       >
         {/* Las Flores / Redes Sociales */}
         <div className="flex flex-col md:flex-row justify-center items-center gap-10 md:gap-12 w-full h-full relative z-10">
@@ -608,7 +595,7 @@ const Storefront = () => {
         <HeroSection />
 
         {/* Placeholder sections for scrolling demo */}
-        <section id="nosotros" className="md:py-24 px-8 bg-florencia-cream min-h-screen flex items-center justify-center">
+        <section id="nosotros" className="md:py-24 px-8 bg-[#f4f4f6] min-h-screen flex items-center justify-center">
           <div className="max-w-3xl text-center">
             <h2 className="text-4xl md:text-5xl mb-8">Nuestra Historia</h2>
             <div className="text-base md:text-[17px] text-gray-600 leading-relaxed space-y-6">
