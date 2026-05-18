@@ -18,22 +18,26 @@ import bgsocial169 from './assets/bgsocial169.webp';
 import bgsocial916 from './assets/bgsocial916.webp';
 import bghistory169 from './assets/bghistory169.webp';
 import bghistory916 from './assets/bghistory916.webp';
+import rutaImg from './assets/ruta.webp';
 
 const NotificationBar = () => {
   const [text, setText] = useState('Envíos en Pereira y Dosquebradas • Diseños florales exclusivos');
+  const [themeColor, setThemeColor] = useState('dark');
 
   useEffect(() => {
     // Listen for real-time updates to the notification config
     const unsub = onSnapshot(doc(db, 'config', 'notification'), (doc) => {
       if (doc.exists()) {
-        setText(doc.data().text);
+        const data = doc.data();
+        setText(data.text);
+        setThemeColor(data.themeColor || 'dark');
       }
     });
     return () => unsub();
   }, []);
 
   return (
-    <div className="w-full bg-florencia-dark text-white py-2 text-center text-[12px] md:text-sm tracking-[0.2em] font-normal relative z-[60]">
+    <div className={`w-full ${themeColor === 'old' ? 'bg-florencia-old' : 'bg-florencia-dark'} text-white py-2 text-center text-[12px] md:text-sm tracking-[0.2em] font-normal relative z-[60]`}>
       <p>{text}</p>
     </div>
   );
@@ -166,6 +170,63 @@ const CategoryModal = ({ category, onClose, hidePrices }) => {
   );
 };
 
+const BlogPostModal = ({ post, onClose }) => {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
+  if (!post) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[110] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 md:p-8"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+          onClick={(e) => e.stopPropagation()}
+          className="bg-florencia-cream w-full max-w-4xl max-h-[90vh] overflow-y-auto relative rounded-lg shadow-2xl"
+        >
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 z-[120] p-2 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-300 group"
+          >
+            <svg className="w-5 h-5 text-florencia-dark group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <div className="flex flex-col md:flex-row h-full">
+            <div className="md:w-1/2 aspect-square md:aspect-auto">
+              <img
+                src={post.imageUrl}
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+              <h2 className="text-3xl md:text-4xl font-serif italic mb-6 text-florencia-dark">{post.title}</h2>
+              <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed whitespace-pre-wrap">
+                {post.description}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
 // Smooth scroll con offset fijo
 const scrollToSection = (id) => {
   const element = document.getElementById(id);
@@ -254,9 +315,9 @@ const Header = () => {
   );
 };
 
-const Footer = () => {
+const Footer = ({ themeColor }) => {
   return (
-    <footer id="contacto" className="bg-florencia-dark text-white pt-20 pb-10 px-8">
+    <footer id="contacto" className={`${themeColor === 'old' ? 'bg-florencia-old' : 'bg-florencia-dark'} text-white pt-20 pb-10 px-8`}>
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
         {/* Contacto y Ubicación */}
         <div className="flex flex-col items-center text-center space-y-4">
@@ -270,10 +331,11 @@ const Footer = () => {
               href="https://maps.app.goo.gl/3DCqFHa1ErHoBatA8"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 mt-2 text-florencia-gold hover:opacity-80 transition-opacity w-fit"
+              className="flex items-center gap-2 mt-2 text-white hover:text-florencia-gold transition-opacity w-fit"
             >
               <span>📍</span>
               <span className="font-medium underline underline-offset-4">Cómo llegar</span>
+              <span>📍</span>
             </a>
             <p className="flex flex-col items-center gap-1 mt-4">
               <span className="font-medium">Teléfono:</span>
@@ -283,10 +345,11 @@ const Footer = () => {
               href="http://wa.me/573113004312"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 mt-2 text-florencia-gold hover:opacity-80 transition-opacity w-fit"
+              className="flex items-center gap-2 mt-2 text-white hover:text-florencia-gold transition-opacity w-fit"
             >
               <span>🟢</span>
               <span className="font-medium underline underline-offset-4">Whatsapp</span>
+              <span>🟢</span>
             </a>
             <p className="mt-4">
               <span className="font-medium">Horario:</span>
@@ -378,7 +441,7 @@ const HeroSection = () => {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1, delay: 1.3 }}
-          className="text-lg md:text-xl tracking-[0.3em] uppercase font-light"
+          className="text-lg md:text-xl tracking-[0.3em] uppercase font-light font-narrow"
         >
           • Piezas Únicas •
         </motion.p>
@@ -407,7 +470,7 @@ const WhatsAppButton = () => {
     <motion.div
       initial="initial"
       whileHover="hover"
-      className="fixed bottom-3 right-3 z-[100] flex items-center pointer-events-none"
+      className="fixed bottom-4 right-4 z-[100] flex items-center pointer-events-none"
     >
       <motion.div
         variants={{
@@ -430,15 +493,15 @@ const WhatsAppButton = () => {
           initial: { scale: 1 },
           hover: { scale: 1.1 }
         }}
-        className="bg-[#2ec260] w-12 h-12 rounded-full shadow-[0_10px_25px_-5px_rgba(37,211,102,0.4)] transition-shadow duration-300 flex items-center justify-center pointer-events-auto active:scale-95"
+        className="bg-[#2ec260] w-14 h-14 rounded-full shadow-[0_10px_25px_-5px_rgba(37,211,102,0.4)] transition-shadow duration-300 flex items-center justify-center pointer-events-auto active:scale-95"
       >
-        <img src={whatsappIcon} alt="WhatsApp" className="w-12 h-12" />
+        <img src={whatsappIcon} alt="WhatsApp" className="w-14 h-14" />
       </motion.a>
     </motion.div>
   );
 };
 
-const FloatingSocialTab = () => {
+const FloatingSocialTab = ({ themeColor }) => {
   const scrollToSocial = () => {
     const section = document.getElementById('social-section');
     if (section) {
@@ -452,7 +515,7 @@ const FloatingSocialTab = () => {
       animate={{ x: 0, opacity: 1 }}
       whileHover={{ x: 0 }}
       onClick={scrollToSocial}
-      className="fixed left-0 bottom-0 z-[80] bg-florencia-dark text-white px-2 py-6 rounded-r-xl shadow-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 group overflow-hidden"
+      className={`fixed left-0 bottom-0 z-[80] ${themeColor === 'old' ? 'bg-florencia-old' : 'bg-florencia-dark'} text-white px-2 py-6 rounded-r-xl shadow-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 group overflow-hidden`}
     >
       <span
         className="text-[10px] md:text-xs font-medium tracking-[0.3em] [writing-mode:vertical-rl] rotate-180"
@@ -559,7 +622,7 @@ const SocialFlowersSection = () => {
                   }
                 }}
               />
-              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] uppercase tracking-widest text-florencia-dark font-medium whitespace-nowrap text-center">
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] uppercase tracking-widest text-white font-medium whitespace-nowrap text-center">
                 Seguir en <br /> {social.id === 'fb' ? 'Facebook' : social.id === 'insta' ? 'Instagram' : 'TikTok'}
               </div>
             </motion.a>
@@ -570,17 +633,299 @@ const SocialFlowersSection = () => {
   );
 };
 
+const BlogSection = ({ posts, onPostClick }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (posts.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % posts.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [posts]);
+
+  return (
+    <section className="py-24 bg-white border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="flex flex-col lg:flex-row gap-16 items-stretch">
+          {/* Cómo llegar */}
+          <div className="lg:w-1/2 flex flex-col items-center">
+            <h2 className="text-4xl md:text-5xl font-serif italic mb-10 text-center">Cómo llegar</h2>
+            <a
+              href="https://maps.app.goo.gl/3DCqFHa1ErHoBatA8"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 rounded-2xl overflow-hidden border border-gray-100 group relative w-full block aspect-square md:aspect-auto min-h-[400px]"
+            >
+              <img
+                src={rutaImg}
+                alt="Nuestra ubicación"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <span className="bg-white/90 text-florencia-dark px-6 py-3 rounded-full text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 shadow-lg">
+                  Ver en Google Maps
+                </span>
+              </div>
+            </a>
+          </div>
+
+          {/* Blog Banner */}
+          <div className="lg:w-1/2 flex flex-col items-center relative overflow-hidden">
+            <h2 className="text-4xl md:text-5xl font-serif italic mb-10 text-center">Blog</h2>
+            <div className="flex-1 relative bg-florencia-cream rounded-2xl overflow-hidden shadow-sm border border-gray-100 w-full aspect-square md:aspect-auto min-h-[500px]">
+              {posts.length > 0 ? (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={posts[currentIndex].id}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                    className="absolute inset-0 flex flex-col cursor-pointer"
+                    onClick={() => onPostClick(posts[currentIndex])}
+                  >
+                    <div className="h-2/3 overflow-hidden">
+                      <img
+                        src={posts[currentIndex].imageUrl}
+                        alt={posts[currentIndex].title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="h-1/3 p-8 flex flex-col justify-center bg-white">
+                      <p className="text-[10px] uppercase tracking-[0.3em] text-florencia-gold mb-2">Entrada de Blog</p>
+                      <h3 className="text-2xl md:text-3xl font-serif italic text-florencia-dark group-hover:text-florencia-gold transition-colors line-clamp-2">
+                        {posts[currentIndex].title}
+                      </h3>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-400 italic">
+                  Próximamente nuevas entradas...
+                </div>
+              )}
+
+              {/* Progress indicator dots */}
+              {posts.length > 1 && (
+                <div className="absolute bottom-6 right-8 flex gap-2 z-10">
+                  {posts.map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={`h-1 transition-all duration-300 rounded-full ${idx === currentIndex ? 'w-8 bg-florencia-gold' : 'w-2 bg-gray-200'}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const TestimonialsSection = () => {
+  const reviews = [
+    {
+      name: "Luz Duque",
+      text: "Encantada con el arreglo que mande a hacer. Productos lindos y frescos. Excelente servicio",
+      stars: 5,
+      date: "Reciente"
+    },
+    {
+      name: "Martha Isabel Bedoya",
+      text: "Es un excelente lugar para regalar algo unico, especial y con buen gusto, la atención también es muy buena!",
+      stars: 5,
+      date: "Reciente"
+    },
+    {
+      name: "Paula Andrea Osorio",
+      text: "La atención de Paula súper rápida y oportuna! Sus productos son hermosos y se acomodan a tu presupuesto! Muy recomendados!",
+      stars: 5,
+      date: "Reciente"
+    },
+    {
+      name: "Tulio Alarcón García",
+      text: "Excelente servicio y hermosos arreglos. Recomendado 100%.",
+      stars: 5,
+      date: "Reciente"
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-florencia-cream/30">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16"
+        >
+          <div className="flex justify-center items-center gap-2 mb-4">
+            <svg className="w-6 h-6 text-[#4285F4]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+            </svg>
+            <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Google Reviews</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-serif italic text-florencia-dark">Lo que dicen nuestros clientes</h2>
+          <div className="flex justify-center gap-1 mt-6">
+            {[1, 2, 3, 4, 5].map(i => (
+              <svg key={i} className="w-6 h-6 text-florencia-gold" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            ))}
+            <span className="ml-2 font-medium text-florencia-dark">5.0</span>
+          </div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {reviews.map((review, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
+              className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow"
+            >
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(review.stars)].map((_, i) => (
+                    <svg key={i} className="w-4 h-4 text-florencia-gold" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-600 italic text-sm leading-relaxed mb-6">"{review.text}"</p>
+              </div>
+              <div>
+                <p className="font-serif font-bold text-florencia-dark">{review.name}</p>
+                <p className="text-[10px] uppercase tracking-widest text-gray-400 mt-1">Google User</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="mt-16"
+        >
+          <a
+            href="https://search.google.com/local/writereview?placeid=ChIJvXVo6CF9OI4RD3GYdCZS6Eg"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-florencia-dark text-white rounded-full hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl group"
+          >
+            <span>Danos tu opinión en Google</span>
+            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+const PromoPopup = () => {
+  const [config, setConfig] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Check if it was already closed in this session
+    const isClosed = sessionStorage.getItem('promo_popup_closed');
+    if (isClosed) return;
+
+    const unsub = onSnapshot(doc(db, 'config', 'popup'), (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        setConfig(data);
+        if (data.isActive && data.imageUrl) {
+          // Delay a bit for better UX
+          setTimeout(() => setIsVisible(true), 1500);
+        } else {
+          setIsVisible(false);
+        }
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    sessionStorage.setItem('promo_popup_closed', 'true');
+  };
+
+  return (
+    <AnimatePresence>
+      {isVisible && config && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={handleClose}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            className="relative bg-white rounded-lg shadow-2xl overflow-hidden w-full max-w-[500px] aspect-square"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={handleClose}
+              className="absolute top-3 right-3 z-10 p-2 bg-black/20 hover:bg-black/40 text-white rounded-full transition-colors group"
+            >
+              <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {config.redirectUrl ? (
+              <a href={config.redirectUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                <img
+                  src={config.imageUrl}
+                  alt="Promoción"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                />
+              </a>
+            ) : (
+              <img
+                src={config.imageUrl}
+                alt="Promoción"
+                className="w-full h-full object-cover"
+              />
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 const Storefront = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
   const [hidePrices, setHidePrices] = useState(false);
+  const [themeColor, setThemeColor] = useState('dark');
+  const [blogPosts, setBlogPosts] = useState([]);
 
   useEffect(() => {
     // Listen for general config
     const unsubConfig = onSnapshot(doc(db, 'config', 'notification'), (doc) => {
       if (doc.exists()) {
-        setHidePrices(doc.data().hidePrices || false);
+        const data = doc.data();
+        setHidePrices(data.hidePrices || false);
+        setThemeColor(data.themeColor || 'dark');
       }
     });
 
@@ -594,9 +939,19 @@ const Storefront = () => {
       setLoading(false);
     });
 
+    const qBlog = query(collection(db, 'blog'), orderBy('createdAt', 'desc'));
+    const unsubscribeBlog = onSnapshot(qBlog, (querySnapshot) => {
+      const posts = [];
+      querySnapshot.forEach((doc) => {
+        posts.push({ id: doc.id, ...doc.data() });
+      });
+      setBlogPosts(posts);
+    });
+
     return () => {
       unsubConfig();
       unsubscribe();
+      unsubscribeBlog();
     };
   }, []);
 
@@ -690,9 +1045,12 @@ const Storefront = () => {
             )}
           </div>
         </section>
+
+        <BlogSection posts={blogPosts} onPostClick={setSelectedPost} />
+        <TestimonialsSection />
       </main>
 
-      <Footer />
+      <Footer themeColor={themeColor} />
 
       {selectedCategory && (
         <CategoryModal
@@ -702,8 +1060,16 @@ const Storefront = () => {
         />
       )}
 
+      {selectedPost && (
+        <BlogPostModal
+          post={selectedPost}
+          onClose={() => setSelectedPost(null)}
+        />
+      )}
+
       <WhatsAppButton />
-      <FloatingSocialTab />
+      <FloatingSocialTab themeColor={themeColor} />
+      <PromoPopup />
     </>
   );
 };
@@ -718,3 +1084,4 @@ function App() {
 }
 
 export default App;
+

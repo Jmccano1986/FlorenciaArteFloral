@@ -6,6 +6,7 @@ import Dashboard from './Dashboard';
 import CategoriesManager from './CategoriesManager';
 import ProductsManager from './ProductsManager';
 import ConfigManager from './ConfigManager';
+import BlogManager from './BlogManager';
 import Login from './Login';
 
 // LISTA DE CORREOS AUTORIZADOS
@@ -33,6 +34,7 @@ const AdminLayout = ({ children, user }) => {
     { path: '/admin', label: 'Dashboard' },
     { path: '/admin/categories', label: 'Categorías' },
     { path: '/admin/products', label: 'Productos' },
+    { path: '/admin/blog', label: 'Blog' },
     { path: '/admin/config', label: 'Configuración' },
   ];
 
@@ -181,6 +183,7 @@ const AdminApp = () => {
         <Route path="/" element={<Dashboard />} />
         <Route path="/categories" element={<CategoriesManager />} />
         <Route path="/products" element={<ProductsManager />} />
+        <Route path="/blog" element={<BlogManager />} />
         <Route path="/config" element={<ConfigManager />} />
       </Routes>
     </AdminLayout>
