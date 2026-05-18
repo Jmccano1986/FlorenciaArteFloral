@@ -36,8 +36,16 @@ const NotificationBar = () => {
     return () => unsub();
   }, []);
 
+  const themeClasses = {
+    dark: 'bg-florencia-dark',
+    old: 'bg-florencia-old',
+    redwine: 'bg-florencia-redwine',
+    brujas: 'bg-florencia-brujas'
+  };
+  const bgClass = themeClasses[themeColor] || 'bg-florencia-dark';
+
   return (
-    <div className={`w-full ${themeColor === 'old' ? 'bg-florencia-old' : 'bg-florencia-dark'} text-white py-2 text-center text-[12px] md:text-sm tracking-[0.2em] font-normal relative z-[60]`}>
+    <div className={`w-full ${bgClass} text-white py-2 text-center text-[12px] md:text-sm tracking-[0.2em] font-normal relative z-[60]`}>
       <p>{text}</p>
     </div>
   );
@@ -316,8 +324,16 @@ const Header = () => {
 };
 
 const Footer = ({ themeColor }) => {
+  const themeClasses = {
+    dark: 'bg-florencia-dark',
+    old: 'bg-florencia-old',
+    redwine: 'bg-florencia-redwine',
+    brujas: 'bg-florencia-brujas'
+  };
+  const bgClass = themeClasses[themeColor] || 'bg-florencia-dark';
+
   return (
-    <footer id="contacto" className={`${themeColor === 'old' ? 'bg-florencia-old' : 'bg-florencia-dark'} text-white pt-20 pb-10 px-8`}>
+    <footer id="contacto" className={`${bgClass} text-white pt-20 pb-10 px-8`}>
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
         {/* Contacto y Ubicación */}
         <div className="flex flex-col items-center text-center space-y-4">
@@ -509,13 +525,21 @@ const FloatingSocialTab = ({ themeColor }) => {
     }
   };
 
+  const themeClasses = {
+    dark: 'bg-florencia-dark',
+    old: 'bg-florencia-old',
+    redwine: 'bg-florencia-redwine',
+    brujas: 'bg-florencia-brujas'
+  };
+  const bgClass = themeClasses[themeColor] || 'bg-florencia-dark';
+
   return (
     <motion.button
       initial={{ x: -50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       whileHover={{ x: 0 }}
       onClick={scrollToSocial}
-      className={`fixed left-0 bottom-0 z-[80] ${themeColor === 'old' ? 'bg-florencia-old' : 'bg-florencia-dark'} text-white px-2 py-6 rounded-r-xl shadow-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 group overflow-hidden`}
+      className={`fixed left-0 bottom-0 z-[80] ${bgClass} text-white px-2 py-6 rounded-r-xl shadow-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 group overflow-hidden`}
     >
       <span
         className="text-[10px] md:text-xs font-medium tracking-[0.3em] [writing-mode:vertical-rl] rotate-180"

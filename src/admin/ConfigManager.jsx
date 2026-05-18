@@ -13,7 +13,7 @@ const ConfigManager = () => {
   // Notification Bar Config
   const [text, setText] = useState('');
   const [hidePrices, setHidePrices] = useState(false);
-  const [themeColor, setThemeColor] = useState('dark'); // 'dark' or 'old'
+  const [themeColor, setThemeColor] = useState('dark'); // 'dark', 'redwine', 'brujas' or 'old'
 
   // Popup Config
   const [popupActive, setPopupActive] = useState(false);
@@ -131,7 +131,7 @@ const ConfigManager = () => {
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 Color de Marca (Barra de notificaciones, Footer y redes.)
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <button
                   type="button"
                   onClick={() => setThemeColor('dark')}
@@ -150,18 +150,34 @@ const ConfigManager = () => {
 
                 <button
                   type="button"
-                  onClick={() => setThemeColor('old')}
-                  className={`flex items-center gap-3 p-3 rounded-md border transition-all ${themeColor === 'old'
-                    ? 'border-florencia-old bg-florencia-old/5 ring-1 ring-florencia-old'
+                  onClick={() => setThemeColor('redwine')}
+                  className={`flex items-center gap-3 p-3 rounded-md border transition-all ${themeColor === 'redwine'
+                    ? 'border-florencia-redwine bg-florencia-redwine/5 ring-1 ring-florencia-redwine'
                     : 'border-gray-200 hover:border-gray-300'
                     }`}
                 >
-                  <div className="w-6 h-6 rounded-full bg-[#8F8B5B] border border-black/10 shadow-sm" />
+                  <div className="w-6 h-6 rounded-full bg-[#440E03] border border-black/10 shadow-sm" />
                   <div className="text-left">
-                    <p className="text-sm font-semibold text-gray-900 leading-none mb-1">Olivo Envejecido</p>
-                    <p className="text-[10px] text-gray-500">Color clásico tradicional</p>
+                    <p className="text-sm font-semibold text-gray-900 leading-none mb-1">Rojo Vino Tinto</p>
+                    <p className="text-[10px] text-gray-500">Especial Madres y Navidad</p>
                   </div>
-                  {themeColor === 'old' && <div className="ml-auto text-florencia-old font-bold">✓</div>}
+                  {themeColor === 'redwine' && <div className="ml-auto text-florencia-redwine font-bold">✓</div>}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setThemeColor('brujas')}
+                  className={`flex items-center gap-3 p-3 rounded-md border transition-all ${themeColor === 'brujas'
+                    ? 'border-florencia-brujas bg-florencia-brujas/5 ring-1 ring-florencia-brujas'
+                    : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                >
+                  <div className="w-6 h-6 rounded-full bg-[#E66C2C] border border-black/10 shadow-sm" />
+                  <div className="text-left">
+                    <p className="text-sm font-semibold text-gray-900 leading-none mb-1">Brujas</p>
+                    <p className="text-[10px] text-gray-500">Especial Halloween</p>
+                  </div>
+                  {themeColor === 'brujas' && <div className="ml-auto text-florencia-brujas font-bold">✓</div>}
                 </button>
               </div>
             </div>
