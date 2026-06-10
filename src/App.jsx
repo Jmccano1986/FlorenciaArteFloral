@@ -418,7 +418,7 @@ const Footer = ({ themeColor }) => {
 
       <div className="max-w-6xl mx-auto mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs opacity-50 font-light tracking-widest uppercase">
         <p>&copy; {new Date().getFullYear()} Florencia Arte Floral. Todos los derechos reservados.</p>
-        <p>Desarrollado por <a href="https://cofitx.web.app/" target="_blank" rel="noopener noreferrer" className="hover:text-florencia-gold transition-colors">Cofitx</a></p>
+        <p>Desarrollado por <a href="https://mariocardonadev.web.app/" target="_blank" rel="noopener noreferrer" className="hover:text-florencia-gold transition-colors">MC</a></p>
       </div>
     </footer>
   );
@@ -451,7 +451,7 @@ const HeroSection = () => {
           transition={{ duration: 1, delay: 1 }}
           className="text-5xl md:text-7xl font-serif mb-6 italic"
         >
-          Arte que florece
+          Botánica Contemporánea
         </motion.h1>
         <motion.p
           initial={{ y: 20, opacity: 0 }}
@@ -542,7 +542,7 @@ const FloatingSocialTab = ({ themeColor }) => {
       className={`fixed left-0 bottom-0 z-[80] ${bgClass} text-white px-2 py-6 rounded-r-xl shadow-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 group overflow-hidden`}
     >
       <span
-        className="text-[10px] md:text-xs font-medium tracking-[0.3em] [writing-mode:vertical-rl] rotate-180"
+        className="text-[12px] md:text-xs font-medium tracking-[0.3em] [writing-mode:vertical-rl] rotate-180"
       >
         Nuestras Redes
       </span>
@@ -696,7 +696,7 @@ const BlogSection = ({ posts, onPostClick }) => {
 
           {/* Blog Banner */}
           <div className="lg:w-1/2 flex flex-col items-center relative overflow-hidden">
-            <h2 className="text-4xl md:text-5xl font-serif italic mb-10 text-center">Blog</h2>
+            <h2 className="text-4xl md:text-5xl font-serif italic mb-10 text-center">Experiencias Florencia</h2>
             <div className="flex-1 relative bg-florencia-cream rounded-2xl overflow-hidden shadow-sm border border-gray-100 w-full aspect-square md:aspect-auto min-h-[500px]">
               {posts.length > 0 ? (
                 <AnimatePresence mode="wait">
