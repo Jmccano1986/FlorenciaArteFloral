@@ -418,7 +418,7 @@ const Footer = ({ themeColor }) => {
 
       <div className="max-w-6xl mx-auto mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs opacity-50 font-light tracking-widest uppercase">
         <p>&copy; {new Date().getFullYear()} Florencia Arte Floral. Todos los derechos reservados.</p>
-        <p>Desarrollado por <a href="https://mariocardonadev.web.app/" target="_blank" rel="noopener noreferrer" className="hover:text-florencia-gold transition-colors">MC</a></p>
+        <p>Desarrollado por <a href="https://mariocardonadev.web.app/" target="_blank" rel="noopener noreferrer" className="hover:text-florencia-gold transition-colors">MCDev</a></p>
       </div>
     </footer>
   );
